@@ -1,0 +1,20 @@
+@use './content/item-name/app-output.scss';
+@use './content/item-name/app-result.scss';
+@use './content/item-name/app-items.scss';
+@use './content/item-name/app-items-header.scss';
+@use './content/item-name/app-item-name.scss';
+
+@use './content/description/app-descriptions.scss';
+@use './content/description/app-descriptions-header.scss';
+@use './content/description/app-description.scss';
+
+.app__results-output {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  height: 50vh;
+  overflow-y: scroll;
+  padding: 5px;
+  outline: 1px solid var(--outline);
+}

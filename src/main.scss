@@ -1,0 +1,11 @@
+// VARIABLES
+@use './styles/Variables/variable.scss';
+
+// BASE
+@use './styles/Base/base.scss';
+
+// ELEMENTS
+@use './styles/App/app.scss';
+@use './styles/Main/main.scss';
+@use './styles/Form/form.scss';
+@use './styles/CardList/result-section.scss';

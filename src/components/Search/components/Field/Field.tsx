@@ -2,7 +2,7 @@ import { Component } from 'react';
 
 class Field extends Component {
   render() {
-    return <input className="app__search" placeholder="Search" />;
+    return <input className="app__search-field" placeholder="Search" />;
   }
 }
 

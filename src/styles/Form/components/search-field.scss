@@ -1,0 +1,11 @@
+.app__search-field {
+  padding: 5px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+
+@media (hover: hover) {
+  .app__search-field:hover {
+    border: 1px solid var(--border-hover);
+  }
+}

@@ -1,0 +1,10 @@
+.app__main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 800px;
+  min-height: 600px;
+  padding: 20px;
+  outline: 1px solid var(--outline);
+}
