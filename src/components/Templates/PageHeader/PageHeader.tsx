@@ -1,10 +1,5 @@
 import { Component, type JSX } from 'react';
-
-interface PageHeaderProps {
-  level?: 1 | 2 | 3 | 4 | 5 | 6;
-  className?: string;
-  children?: React.ReactNode;
-}
+import type { PageHeaderProps } from './interface';
 
 class PageHeader extends Component<PageHeaderProps> {
   render() {
