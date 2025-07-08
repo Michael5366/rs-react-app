@@ -1,10 +1,12 @@
 import { Component } from 'react';
-import type { HtmlElementProps } from '../../../types/interfaces';
+import type Button from './interface';
 
-class ButtonTemplate extends Component<HtmlElementProps> {
+class ButtonTemplate extends Component<Button> {
   render() {
     return (
-      <button className={this.props.className}>{this.props.children}</button>
+      <button className={this.props.className} type={this.props.type}>
+        {this.props.children}
+      </button>
     );
   }
 }
