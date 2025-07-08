@@ -3,6 +3,7 @@ import type { HtmlElementProps } from '../types/interfaces';
 import Main from '../components/Main/Main';
 import SearchForm from '../components/Search/Form';
 import CardList from '../components/CardList/CardList';
+import ErrorButton from '../components/ErrorButton/ErrorButton';
 
 class App extends Component<HtmlElementProps> {
   render() {
@@ -11,6 +12,7 @@ class App extends Component<HtmlElementProps> {
         <Main>
           <SearchForm />
           <CardList />
+          <ErrorButton />
         </Main>
       </div>
     );
