@@ -3,11 +3,18 @@ import PageHeader from '../Templates/PageHeader/PageHeader';
 import Wrapper from './components/Wrapper/Wrapper';
 import Field from './components/Field/Field';
 import ButtonTemplate from '../Templates/ButtonTemplate/ButtonTemplate';
+import type FormProps from './interface';
 
-class SearchForm extends Component {
-  handleSubmit(e: FormEvent): void {
+class SearchForm extends Component<FormProps> {
+  state: { value: string } = {
+    value: '',
+  };
+
+  handleSubmit = (e: FormEvent): void => {
     e.preventDefault();
-  }
+    const trimmed = this.state.value.trim();
+    this.props.onSearch(trimmed);
+  };
 
   render() {
     return (
@@ -17,7 +24,10 @@ class SearchForm extends Component {
         </PageHeader>
 
         <Wrapper>
-          <Field />
+          <Field
+            value={this.state.value}
+            onChange={(value: string): void => this.setState({ value: value })}
+          />
           <ButtonTemplate className="app__search-btn" type="submit">
             Let&apos;s go
           </ButtonTemplate>

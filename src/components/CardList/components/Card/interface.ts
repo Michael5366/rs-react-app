@@ -1,6 +1,5 @@
-export default interface CardProps {
-  headerItem?: string;
-  title?: string;
-  headerDescription?: string;
-  description: string;
+import type { FilmData } from '../../../../types/interfaces';
+
+export interface ItemProps {
+  item: FilmData;
 }

@@ -1,9 +1,10 @@
 import { Component } from 'react';
 import Section from './components/Section/Section';
+import { type DataProps } from '../../types/interfaces';
 
-class CardList extends Component {
+class CardList extends Component<DataProps> {
   render() {
-    return <Section />;
+    return <Section data={this.props.data} />;
   }
 }
 
