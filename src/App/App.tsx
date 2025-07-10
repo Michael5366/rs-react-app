@@ -13,7 +13,20 @@ class App extends Component<HtmlElementProps> {
     detail: null,
   };
 
+  componentDidMount(): void {
+    const savedTerm: string | null = localStorage.getItem('searchTerm');
+    if (savedTerm) {
+      this.handleSearch(savedTerm);
+    } else {
+      this.handleSearch();
+    }
+  }
+
   handleSearch = async (term?: string) => {
+    if (term) {
+      localStorage.setItem('searchTerm', term);
+    }
+
     const url: string = term
       ? `https://swapi.py4e.com/api/films/?search=${encodeURIComponent(term)}`
       : 'https://swapi.py4e.com/api/films/';
