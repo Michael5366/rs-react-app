@@ -1,0 +1,25 @@
+.app__theme-toggle {
+  position: absolute;
+  top: 2vh;
+  right: 3vw;
+  display: flex;
+  align-items: center;
+  width: 25px;
+  // height: 10px;
+  outline: 2px solid var(--theme-toggle);
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.app__toggle-thumb {
+  width: 10px;
+  height: 10px;
+  background: var(--toggle-thumb);
+  border-radius: 30px;
+  margin: 2px;
+  transform: translateX(0px);
+}
+
+.app__toggle-thumb--right {
+  transform: translateX(11px);
+}

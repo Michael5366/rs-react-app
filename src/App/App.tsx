@@ -6,6 +6,7 @@ import CardList from '../components/CardList/CardList';
 import ErrorButton from '../components/ErrorButton/ErrorButton';
 import fetchData from '../api/swapiService';
 import type { Film } from './interface';
+import ThemeToggle from '../components/ThemeToggle/ThemeToggle';
 
 class App extends Component<HtmlElementProps> {
   state: { data: null; detail: null; loading: boolean } = {
@@ -65,6 +66,8 @@ class App extends Component<HtmlElementProps> {
   render() {
     return (
       <div className="app">
+        <ThemeToggle />
+
         <Main>
           <SearchForm onSearch={this.handleSearch} />
           <CardList data={this.state.data} loading={this.state.loading} />
