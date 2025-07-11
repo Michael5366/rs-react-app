@@ -1,0 +1,22 @@
+.app__spinner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  margin: auto;
+  border: 3px dashed var(--spinner);
+  border-radius: 100%;
+  animation: spinner 1s linear infinite;
+}
+
+@keyframes spinner {
+  100% {
+    transform: rotate(360deg);
+  }
+}

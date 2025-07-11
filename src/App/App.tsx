@@ -8,9 +8,10 @@ import fetchData from '../api/swapiService';
 import type { Film } from './interface';
 
 class App extends Component<HtmlElementProps> {
-  state: { data: null; detail: null } = {
+  state: { data: null; detail: null; loading: boolean } = {
     data: null,
     detail: null,
+    loading: false,
   };
 
   componentDidMount(): void {
@@ -27,6 +28,8 @@ class App extends Component<HtmlElementProps> {
       localStorage.setItem('searchTerm', term);
     }
 
+    this.setState({ loading: true });
+
     const url: string = term
       ? `https://swapi.py4e.com/api/films/?search=${encodeURIComponent(term)}`
       : 'https://swapi.py4e.com/api/films/';
@@ -35,7 +38,7 @@ class App extends Component<HtmlElementProps> {
       const data = await fetchData(url);
 
       if (data && data.detail) {
-        this.setState({ detail: data.detail, data: null });
+        this.setState({ detail: data.detail, data: null, loading: false });
         return;
       }
 
@@ -47,9 +50,15 @@ class App extends Component<HtmlElementProps> {
           desHeader: 'Item description',
           opening_crawl: film.opening_crawl,
         })),
+        loading: false,
       });
     } catch (error) {
       console.error(`Error from handleSearch: ${error}`);
+      this.setState({
+        detail: 'Something went wrong',
+        data: null,
+        loading: false,
+      });
     }
   };
 
@@ -58,7 +67,7 @@ class App extends Component<HtmlElementProps> {
       <div className="app">
         <Main>
           <SearchForm onSearch={this.handleSearch} />
-          <CardList data={this.state.data} />
+          <CardList data={this.state.data} loading={this.state.loading} />
           <ErrorButton />
         </Main>
       </div>

@@ -14,4 +14,5 @@ export interface FilmData {
 
 export interface DataProps {
   data: FilmData[] | null;
+  loading: boolean;
 }

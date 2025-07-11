@@ -9,6 +9,7 @@
 @use './content/description/app-description.scss';
 
 .app__results-output {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 5px;

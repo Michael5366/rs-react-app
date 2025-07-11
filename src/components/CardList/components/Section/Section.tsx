@@ -2,10 +2,11 @@ import { Component } from 'react';
 import PageHeader from '../../../Templates/PageHeader/PageHeader';
 import Card from '../Card/Card';
 import type { DataProps } from '../../../../types/interfaces';
+import Spinner from '../../../Spinner/Spinner';
 
 class Section extends Component<DataProps> {
   render() {
-    const { data } = this.props;
+    const { data, loading } = this.props;
 
     return (
       <section className="app__results">
@@ -15,9 +16,13 @@ class Section extends Component<DataProps> {
 
         <section className="app__results-output">
           <>
-            {data?.map((item, index) => {
-              return <Card key={index} item={item} />;
-            })}
+            {loading ? (
+              <Spinner />
+            ) : (
+              data?.map((item, index) => {
+                return <Card key={index} item={item} />;
+              })
+            )}
           </>
         </section>
       </section>
