@@ -9,10 +9,11 @@ import type { Film } from './interface';
 import ThemeToggle from '../components/ThemeToggle/ThemeToggle';
 
 class App extends Component<HtmlElementProps> {
-  state: { data: null; detail: null; loading: boolean } = {
+  state: { data: null; detail: null; loading: boolean; error: string } = {
     data: null,
     detail: null,
     loading: false,
+    error: '',
   };
 
   componentDidMount(): void {
@@ -55,11 +56,21 @@ class App extends Component<HtmlElementProps> {
       });
     } catch (error) {
       console.error(`Error from handleSearch: ${error}`);
-      this.setState({
-        detail: 'Something went wrong',
-        data: null,
-        loading: false,
-      });
+      if (error instanceof Error) {
+        this.setState({
+          detail: 'Something went wrong',
+          data: null,
+          loading: false,
+          error: error.message,
+        });
+      } else {
+        this.setState({
+          detail: 'Something went wrong',
+          data: null,
+          loading: false,
+          error: 'Unknown error occurred',
+        });
+      }
     }
   };
 
@@ -70,7 +81,11 @@ class App extends Component<HtmlElementProps> {
 
         <Main>
           <SearchForm onSearch={this.handleSearch} />
-          <CardList data={this.state.data} loading={this.state.loading} />
+          <CardList
+            data={this.state.data}
+            loading={this.state.loading}
+            error={this.state.error}
+          />
           <ErrorButton />
         </Main>
       </div>

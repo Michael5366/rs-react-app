@@ -1,0 +1,16 @@
+.app__error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: var(--body-bg);
+}
+
+.app__error-text {
+  font-size: 2rem;
+
+  @media (max-width: 535px) {
+    font-size: 1.5rem;
+  }
+}

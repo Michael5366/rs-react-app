@@ -3,10 +3,11 @@ import PageHeader from '../../../Templates/PageHeader/PageHeader';
 import Card from '../Card/Card';
 import type { DataProps } from '../../../../types/interfaces';
 import Spinner from '../../../Spinner/Spinner';
+import ErrorMsg from '../../../Templates/ErrorMsg/ErrorMsg';
 
 class Section extends Component<DataProps> {
   render() {
-    const { data, loading } = this.props;
+    const { data, loading, error } = this.props;
 
     return (
       <section className="app__results">
@@ -16,7 +17,9 @@ class Section extends Component<DataProps> {
 
         <section className="app__results-output">
           <>
-            {loading ? (
+            {error ? (
+              <ErrorMsg errorMsg={error} />
+            ) : loading ? (
               <Spinner />
             ) : (
               data?.map((item, index) => {

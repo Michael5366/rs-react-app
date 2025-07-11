@@ -1,5 +1,6 @@
 import { Component, type ErrorInfo } from 'react';
 import type { ErrorBoundaryProps, ErrorBoundaryState } from './interface';
+import ErrorMsg from '../Templates/ErrorMsg/ErrorMsg';
 
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
@@ -18,7 +19,9 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
   render() {
     if (this.state.hasError) {
-      return this.props.fallback ?? <h1>Something went wrong</h1>;
+      return (
+        this.props.fallback ?? <ErrorMsg errorMsg="Something went wrong" />
+      );
     }
 
     return this.props.children;
