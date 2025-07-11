@@ -1,6 +1,6 @@
-:root {
+.app {
   /* BASE */
-  --body-bg: #ffffff;
+  --app-bg: #ffffff;
   --color: #6b6b6b;
   --color-light: #f1f1f1;
   --outline: #c1c1c1;
@@ -19,9 +19,9 @@
   --toggle-thumb: #000;
 }
 
-:root.dark-theme {
+.app.dark-theme {
   /* BASE */
-  --body-bg: #181a1b;
+  --app-bg: #181a1b;
   --color: #e2e2e2;
   --color-light: #000000;
   --outline: #2c2f30;

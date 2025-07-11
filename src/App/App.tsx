@@ -5,15 +5,16 @@ import SearchForm from '../components/Search/Form';
 import CardList from '../components/CardList/CardList';
 import ErrorButton from '../components/ErrorButton/ErrorButton';
 import fetchData from '../api/swapiService';
-import type { Film } from './interface';
+import type { AppState, Film } from './interface';
 import ThemeToggle from '../components/ThemeToggle/ThemeToggle';
 
-class App extends Component<HtmlElementProps> {
-  state: { data: null; detail: null; loading: boolean; error: string } = {
+class App extends Component<HtmlElementProps, AppState> {
+  state: AppState = {
     data: null,
-    detail: null,
+    detail: '',
     loading: false,
     error: '',
+    darkMode: false,
   };
 
   componentDidMount(): void {
@@ -45,13 +46,14 @@ class App extends Component<HtmlElementProps> {
       }
 
       this.setState({
-        detail: null,
-        data: data.results?.map((film: Film) => ({
-          itemHeader: 'Item name',
-          title: film.title,
-          desHeader: 'Item description',
-          opening_crawl: film.opening_crawl,
-        })),
+        detail: '',
+        data:
+          data.results?.map((film: Film) => ({
+            itemHeader: 'Item name',
+            title: film.title,
+            desHeader: 'Item description',
+            opening_crawl: film.opening_crawl,
+          })) ?? null,
         loading: false,
       });
     } catch (error) {
@@ -74,10 +76,14 @@ class App extends Component<HtmlElementProps> {
     }
   };
 
+  themeToggle = (): void => {
+    this.setState((prev) => ({ darkMode: !prev.darkMode }));
+  };
+
   render() {
     return (
-      <div className="app">
-        <ThemeToggle />
+      <div className={`app ${this.state.darkMode ? 'dark-theme' : ''}`}>
+        <ThemeToggle onToggle={this.themeToggle} isDark={this.state.darkMode} />
 
         <Main>
           <SearchForm onSearch={this.handleSearch} />

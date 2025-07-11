@@ -1,23 +1,14 @@
 import { Component } from 'react';
-import type { ThemeToggleState } from './interface';
+import type { ThemeToggleProps } from './interface';
 
-class ThemeToggle extends Component<object, ThemeToggleState> {
-  state: { isRight: boolean } = {
-    isRight: false,
-  };
-
-  themeToggle = (): void => {
-    this.setState((prev) => ({ isRight: !prev.isRight }));
-    document.documentElement.classList.toggle('dark-theme');
-  };
-
+class ThemeToggle extends Component<ThemeToggleProps> {
   render() {
-    const { isRight } = this.state;
+    const { onToggle, isDark } = this.props;
 
     return (
-      <div className="app__theme-toggle" onClick={this.themeToggle}>
+      <div className="app__theme-toggle" onClick={onToggle}>
         <div
-          className={`app__toggle-thumb ${isRight ? 'app__toggle-thumb--right' : ''}`}
+          className={`app__toggle-thumb ${isDark ? 'app__toggle-thumb--right' : ''}`}
         ></div>
       </div>
     );

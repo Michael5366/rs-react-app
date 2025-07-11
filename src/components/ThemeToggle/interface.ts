@@ -1,3 +1,4 @@
-export interface ThemeToggleState {
-  isRight: boolean;
+export interface ThemeToggleProps {
+  isDark: boolean;
+  onToggle: () => void;
 }

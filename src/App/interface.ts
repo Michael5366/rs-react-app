@@ -1,3 +1,5 @@
+import type { FilmData } from '../types/interfaces';
+
 export interface Film {
   title: string;
   episode_id: number;
@@ -19,4 +21,12 @@ export interface SwapiFilmResponse {
   count?: number;
   results?: Film[];
   detail?: string;
+}
+
+export interface AppState {
+  data: FilmData[] | null;
+  detail: string;
+  loading: boolean;
+  error: string;
+  darkMode: boolean;
 }
