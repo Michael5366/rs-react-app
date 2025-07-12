@@ -21,10 +21,12 @@ class Section extends Component<DataProps> {
               <ErrorMsg errorMsg={error} />
             ) : loading ? (
               <Spinner />
-            ) : (
+            ) : data && data.length > 0 ? (
               data?.map((item, index) => {
                 return <Card key={index} item={item} />;
               })
+            ) : (
+              <ErrorMsg errorMsg="Nothing matched your query" />
             )}
           </>
         </section>
