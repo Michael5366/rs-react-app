@@ -16,7 +16,7 @@ class RenderContent extends Component<DataProps> {
           !loading &&
           data &&
           data?.length > 0 &&
-          data.map((item, index) => <Card key={index} item={item} />)}
+          data.map((item) => <Card key={item.title} item={item} />)}
         {!error && !loading && (!data || data.length === 0) && (
           <ErrorMsg errorMsg="Nothing matched your query" />
         )}
