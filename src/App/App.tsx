@@ -26,6 +26,15 @@ class App extends Component<HtmlElementProps, AppState> {
     }
   }
 
+  handleError = (message: string) => {
+    this.setState({
+      detail: 'Something went wrong',
+      data: null,
+      loading: false,
+      error: message,
+    });
+  };
+
   handleSearch = async (term?: string) => {
     if (term) {
       localStorage.setItem('searchTerm', term);
@@ -59,19 +68,9 @@ class App extends Component<HtmlElementProps, AppState> {
     } catch (error) {
       console.error(`Error from handleSearch: ${error}`);
       if (error instanceof Error) {
-        this.setState({
-          detail: 'Something went wrong',
-          data: null,
-          loading: false,
-          error: error.message,
-        });
+        this.handleError(error.message);
       } else {
-        this.setState({
-          detail: 'Something went wrong',
-          data: null,
-          loading: false,
-          error: 'Unknown error occurred',
-        });
+        this.handleError('Unknown error occurred');
       }
     }
   };
