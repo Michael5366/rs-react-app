@@ -9,8 +9,6 @@ class ErrorButton extends Component {
 
   handleError = () => {
     this.setState({ throwError: true });
-
-    throw new Error('Error from ErrorButton');
   };
 
   render() {
