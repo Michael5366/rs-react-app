@@ -10,7 +10,11 @@ class RenderContent extends Component<DataProps> {
 
     return (
       <>
-        {error && <ErrorMsg errorMsg={error} />}
+        {error && (
+          <ErrorMsg
+            errorMsg={typeof error === 'string' ? error : String(error)}
+          />
+        )}
         {!error && loading && <Spinner />}
         {!error &&
           !loading &&
