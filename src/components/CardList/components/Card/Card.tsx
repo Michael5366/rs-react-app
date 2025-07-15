@@ -23,20 +23,3 @@ class Card extends Component<ItemProps> {
 }
 
 export default Card;
-
-/*
-
-            <div class="app__output">
-              <div class="app__result">
-                <div class="app__items">
-                  <h3 class="app__items-header">Item name</h3>
-                  <div class="app__item-name">Item 1</div>
-                </div>
-                <div class="app__descriptions">
-                  <h3 class="app__descriptions-header">Item description</h3>
-                  <div class="app__description">description 1</div>
-                </div>
-              </div>
-            </div>
-
-*/
