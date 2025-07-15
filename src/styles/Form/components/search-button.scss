@@ -1,0 +1,27 @@
+.app__search-btn {
+  all: unset;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--color-light);
+  background: var(--btn-bg);
+  padding-left: 18px;
+  padding-right: 18px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+@media (max-width: 350px) {
+  .app__search-btn {
+    padding: 8px;
+  }
+}
+
+@media (hover: hover) {
+  .app__search-btn:hover {
+    background: var(--btn-bg-hover);
+  }
+}

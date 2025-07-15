@@ -1,0 +1,32 @@
+.app__btn-back {
+  all: unset;
+  position: absolute;
+  bottom: 43vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--color-light);
+  background: var(--btn-bg);
+  padding-left: 18px;
+  padding-right: 18px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+@media (max-width: 535px) {
+  .app__btn-back {
+    font-size: 0.6rem;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}
+
+@media (hover: hover) {
+  .app__btn-back:hover {
+    background: var(--btn-bg-hover);
+  }
+}

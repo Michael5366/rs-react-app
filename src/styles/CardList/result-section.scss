@@ -1,0 +1,14 @@
+@use './OutputSection/results-output.scss';
+
+.app__results {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 800px;
+  min-height: 400px;
+  padding: 20px;
+  outline: 1px solid var(--outline);
+}

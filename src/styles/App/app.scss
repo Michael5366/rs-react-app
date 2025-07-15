@@ -1,0 +1,9 @@
+@use './error-btn.scss';
+
+.app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: var(--app-bg);
+}

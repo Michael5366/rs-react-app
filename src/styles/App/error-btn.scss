@@ -1,0 +1,18 @@
+.app__error-btn {
+  all: unset;
+  align-self: center;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--color-light);
+  background: var(--btn-bg);
+  padding: 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+@media (hover: hover) {
+  .app__error-btn:hover {
+    background: var(--btn-bg-hover);
+  }
+}

@@ -1,0 +1,23 @@
+// VARIABLES
+@use './styles/Variables/variable.scss';
+
+// BASE
+@use './styles/Base/base.scss';
+
+// ELEMENTS
+@use './styles/App/app.scss';
+@use './styles/Main/main.scss';
+@use './styles/Form/form.scss';
+@use './styles/CardList/result-section.scss';
+
+// SPINNER
+@use './styles/Spinner/spinner.scss';
+
+// THEME-TOGGLE
+@use './styles/Theme-toggle/theme-toggle.scss';
+
+// ERROR-MSG
+@use './styles/ErrorMsg/error-msg.scss';
+
+// GO-BACK-BUTTON
+@use './styles/GoBackButton/go-back-button.scss';
