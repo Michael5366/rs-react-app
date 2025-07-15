@@ -15,11 +15,13 @@ class App extends Component<HtmlElementProps, AppState> {
     loading: false,
     error: '',
     darkMode: false,
+    searchTerm: '',
   };
 
   componentDidMount(): void {
     const savedTerm: string | null = localStorage.getItem('searchTerm');
     if (savedTerm) {
+      this.setState({ searchTerm: savedTerm });
       this.handleSearch(savedTerm);
     } else {
       this.handleSearch();
@@ -40,7 +42,7 @@ class App extends Component<HtmlElementProps, AppState> {
       localStorage.setItem('searchTerm', term);
     }
 
-    this.setState({ loading: true });
+    this.setState({ loading: true, searchTerm: term ?? '' });
 
     const url: string = term
       ? `https://swapi.py4e.com/api/films/?search=${encodeURIComponent(term)}`
@@ -85,7 +87,11 @@ class App extends Component<HtmlElementProps, AppState> {
         <ThemeToggle onToggle={this.themeToggle} isDark={this.state.darkMode} />
 
         <Main>
-          <SearchForm onSearch={this.handleSearch} />
+          <SearchForm
+            value={this.state.searchTerm}
+            onSearch={this.handleSearch}
+            onChange={(value) => this.setState({ searchTerm: value })}
+          />
           <CardList
             data={this.state.data}
             loading={this.state.loading}

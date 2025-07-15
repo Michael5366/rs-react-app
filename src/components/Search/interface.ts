@@ -1,3 +1,5 @@
 export default interface FormProps {
-  onSearch: (term?: string) => void;
+  value: string;
+  onSearch: (term: string) => void;
+  onChange: (value: string) => void;
 }

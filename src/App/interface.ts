@@ -29,4 +29,5 @@ export interface AppState {
   loading: boolean;
   error: string;
   darkMode: boolean;
+  searchTerm: string;
 }

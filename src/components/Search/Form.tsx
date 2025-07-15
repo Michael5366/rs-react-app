@@ -6,13 +6,9 @@ import ButtonTemplate from '../Templates/ButtonTemplate/ButtonTemplate';
 import type FormProps from './interface';
 
 class SearchForm extends Component<FormProps> {
-  state: { value: string } = {
-    value: '',
-  };
-
   handleSubmit = (e: FormEvent): void => {
     e.preventDefault();
-    const trimmed = this.state.value.trim();
+    const trimmed = this.props.value.trim();
     this.props.onSearch(trimmed);
   };
 
@@ -24,10 +20,7 @@ class SearchForm extends Component<FormProps> {
         </PageHeader>
 
         <Wrapper>
-          <Field
-            value={this.state.value}
-            onChange={(value: string): void => this.setState({ value: value })}
-          />
+          <Field value={this.props.value} onChange={this.props.onChange} />
           <ButtonTemplate className="app__search-btn" type="submit">
             Let&apos;s go
           </ButtonTemplate>
