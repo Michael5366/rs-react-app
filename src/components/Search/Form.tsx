@@ -14,7 +14,11 @@ class SearchForm extends Component<FormProps> {
 
   render() {
     return (
-      <form className="app__controls" onSubmit={this.handleSubmit}>
+      <form
+        className="app__controls"
+        onSubmit={this.handleSubmit}
+        data-testid="search-form"
+      >
         <PageHeader level={2} className="app__controls-header">
           Top controls
         </PageHeader>
