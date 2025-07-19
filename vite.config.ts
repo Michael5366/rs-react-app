@@ -22,6 +22,7 @@ export default defineConfig({
         '**/interface.ts',
         '**/interfaces.ts',
         'src/**/*.d.ts',
+        'src/main.tsx',
       ],
 
       thresholds: {
