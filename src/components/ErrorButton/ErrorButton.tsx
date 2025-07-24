@@ -1,25 +1,21 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import ButtonTemplate from '../Templates/ButtonTemplate/ButtonTemplate';
 import BrokenComponent from './BrokenComponent';
 
-class ErrorButton extends Component {
-  state: { throwError: boolean } = {
-    throwError: false,
+const ErrorButton = () => {
+  const [throwError, setThrowError] = useState(false);
+
+  const handleError = () => {
+    setThrowError(true);
   };
 
-  handleError = () => {
-    this.setState({ throwError: true });
-  };
-
-  render() {
-    return this.state.throwError ? (
-      <BrokenComponent />
-    ) : (
-      <ButtonTemplate className="app__error-btn" onClick={this.handleError}>
-        Error button
-      </ButtonTemplate>
-    );
-  }
-}
+  return throwError ? (
+    <BrokenComponent />
+  ) : (
+    <ButtonTemplate className="app__error-btn" onClick={handleError}>
+      Error button
+    </ButtonTemplate>
+  );
+};
 
 export default ErrorButton;
