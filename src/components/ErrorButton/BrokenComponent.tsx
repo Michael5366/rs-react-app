@@ -1,10 +1,5 @@
-import { Component } from 'react';
-
-class BrokenComponent extends Component {
-  render() {
-    throw new Error('Oops from BrokenComponent');
-    return null;
-  }
-}
+const BrokenComponent = () => {
+  throw new Error('Oops from BrokenComponent');
+};
 
 export default BrokenComponent;
