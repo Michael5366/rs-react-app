@@ -8,7 +8,7 @@ class Section extends Component<DataProps> {
     const { data, loading, error } = this.props;
 
     return (
-      <section className="app__results">
+      <section className="app__results" data-testid="cardListSection">
         <PageHeader level={2} className="app__results-header">
           Result
         </PageHeader>
