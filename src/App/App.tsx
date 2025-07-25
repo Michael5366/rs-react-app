@@ -1,107 +1,101 @@
-import { Component } from 'react';
-import type { HtmlElementProps } from '../types/interfaces';
+import { useCallback, useEffect, useState } from 'react';
+import type { FilmData } from '../types/interfaces';
 import Main from '../components/Main/Main';
 import SearchForm from '../components/Search/Form';
 import CardList from '../components/CardList/CardList';
 import ErrorButton from '../components/ErrorButton/ErrorButton';
 import fetchData from '../api/swapiService';
-import type { AppState, Film } from './interface';
+import type { Film, SwapiFilmResponse } from './interface';
 import ThemeToggle from '../components/ThemeToggle/ThemeToggle';
 
-class App extends Component<HtmlElementProps, AppState> {
-  state: AppState = {
-    data: null,
-    detail: '',
-    loading: false,
-    error: '',
-    darkMode: false,
-    searchTerm: '',
+const App = () => {
+  const [data, setData] = useState<FilmData[] | null>(null);
+  const [detail, setDetail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [darkMode, setDarkMode] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleError = (message: string): void => {
+    setDetail('Something went wrong');
+    setData(null);
+    setLoading(false);
+    setError(message);
   };
 
-  componentDidMount(): void {
-    const savedTerm: string | null = localStorage.getItem('searchTerm');
-    if (savedTerm) {
-      this.setState({ searchTerm: savedTerm });
-      this.handleSearch(savedTerm);
-    } else {
-      this.handleSearch();
-    }
-  }
-
-  handleError = (message: string) => {
-    this.setState({
-      detail: 'Something went wrong',
-      data: null,
-      loading: false,
-      error: message,
-    });
-  };
-
-  handleSearch = async (term?: string) => {
+  const handleSearch = useCallback(async (term?: string) => {
     if (term) {
       localStorage.setItem('searchTerm', term);
     }
 
-    this.setState({ loading: true, searchTerm: term ?? '' });
+    setLoading(true);
+    setSearchTerm(term ?? '');
 
     const url: string = term
       ? `https://swapi.py4e.com/api/films/?search=${encodeURIComponent(term)}`
       : 'https://swapi.py4e.com/api/films/';
 
     try {
-      const data = await fetchData(url);
+      const data: SwapiFilmResponse = await fetchData(url);
 
-      if (data && data.detail) {
-        this.setState({ detail: data.detail, data: null, loading: false });
+      if (data && detail) {
+        setDetail(detail);
+        setData(null);
+        setLoading(false);
         return;
       }
 
-      this.setState({
-        detail: '',
-        data:
-          data.results?.map((film: Film) => ({
-            itemHeader: 'Item name',
-            title: film.title,
-            desHeader: 'Item description',
-            opening_crawl: film.opening_crawl,
-          })) ?? null,
-        loading: false,
-      });
+      setDetail('');
+
+      setData(
+        data.results?.map((film: Film) => ({
+          itemHeader: 'Item name',
+          title: film.title,
+          desHeader: 'Item description',
+          opening_crawl: film.opening_crawl,
+        })) ?? null
+      );
+
+      setLoading(false);
     } catch (error) {
       console.error(`Error from handleSearch: ${error}`);
       if (error instanceof Error) {
-        this.handleError(error.message);
+        handleError(error.message);
       } else {
-        this.handleError('Unknown error occurred');
+        handleError('Unknown error occurred');
       }
     }
+  }, []);
+
+  useEffect((): void => {
+    const savedTerm: string | null = localStorage.getItem('searchTerm');
+    if (savedTerm) {
+      setSearchTerm(savedTerm);
+      handleSearch(savedTerm);
+    } else {
+      handleSearch();
+    }
+  }, [handleSearch]);
+
+  const themeToggle = (): void => {
+    setDarkMode((prev) => !prev);
   };
 
-  themeToggle = (): void => {
-    this.setState((prev) => ({ darkMode: !prev.darkMode }));
-  };
+  return (
+    <div className={`app ${darkMode ? 'dark-theme' : ''}`}>
+      <ThemeToggle onToggle={themeToggle} isDark={darkMode} />
 
-  render() {
-    return (
-      <div className={`app ${this.state.darkMode ? 'dark-theme' : ''}`}>
-        <ThemeToggle onToggle={this.themeToggle} isDark={this.state.darkMode} />
-
-        <Main>
-          <SearchForm
-            value={this.state.searchTerm}
-            onSearch={this.handleSearch}
-            onChange={(value) => this.setState({ searchTerm: value })}
-          />
-          <CardList
-            data={this.state.data}
-            loading={this.state.loading}
-            error={this.state.error}
-          />
-          <ErrorButton />
-        </Main>
-      </div>
-    );
-  }
-}
+      <Main>
+        <SearchForm
+          value={searchTerm}
+          onSearch={handleSearch}
+          onChange={(value) => setSearchTerm(value)}
+        />
+        <CardList data={data} loading={loading} error={error} />
+        <ErrorButton />
+      </Main>
+    </div>
+  );
+};
 
 export default App;
