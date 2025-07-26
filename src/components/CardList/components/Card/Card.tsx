@@ -10,7 +10,7 @@ const Card = ({ item }: ItemProps) => {
         </div>
         <div className="app__descriptions">
           <h3 className="app__descriptions-header">Description header</h3>
-          <div className="app__description">{item.opening_crawl}</div>
+          <div className="app__description">{item.description}</div>
         </div>
       </div>
     </div>

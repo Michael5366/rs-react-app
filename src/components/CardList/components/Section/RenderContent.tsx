@@ -16,7 +16,7 @@ const RenderContent = ({ data, loading, error }: DataProps) => {
         !loading &&
         data &&
         data?.length > 0 &&
-        data.map((item) => <Card key={item.title} item={item} />)}
+        data.map((item) => <Card key={item.id} item={item} />)}
       {!error && !loading && (!data || data.length === 0) && (
         <ErrorMsg errorMsg="Nothing matched your query" />
       )}
