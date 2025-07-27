@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import LeftPanel from '../../components/CardList/LeftPanel/LeftPanel';
 import Main from '../../components/Main/Main';
@@ -7,20 +8,37 @@ import ErrorMsg from '../../components/Templates/ErrorMsg/ErrorMsg';
 import PageHeader from '../../components/Templates/PageHeader/PageHeader';
 import { useAppContext } from '../../context/AppContext';
 import RightPanel from '../../components/CardList/RightPanel/RightPanel';
+import Pagination from '../../Pagination/Pagination';
 
 const HomePage = () => {
-  const { searchTerm, setSearchTerm, handleSearch, data, loading, error } =
-    useAppContext();
+  const {
+    searchTerm,
+    setSearchTerm,
+    handleSearch,
+    data,
+    loading,
+    error,
+    totalPages,
+  } = useAppContext();
   const [searchParams] = useSearchParams();
 
-  const detailsId = searchParams.get('details');
+  const detailsId: string | null = searchParams.get('details');
+  const currentPage: number = parseInt(searchParams.get('page') || '1', 10);
+
+  useEffect(() => {
+    handleSearch?.(searchTerm, currentPage);
+  }, [searchTerm, currentPage, handleSearch]);
+
+  const handleFormSearch = (term: string) => {
+    setSearchTerm?.(term);
+  };
 
   return (
     <Main>
       <SearchForm
-        value={searchTerm}
-        onSearch={handleSearch}
-        onChange={(value) => setSearchTerm(value)}
+        value={searchTerm ?? ''}
+        onSearch={handleFormSearch}
+        onChange={(value) => setSearchTerm?.(value)}
       />
       <section className="app__results" data-testid="cardListSection">
         <PageHeader level={2} className="app__results-header">
@@ -49,11 +67,17 @@ const HomePage = () => {
                 {detailsId ? (
                   <RightPanel />
                 ) : (
-                  <p>Select an episode to view details.</p>
+                  <p>Select an episode to view details</p>
                 )}
               </div>
             </div>
           </div>
+          {!error && !loading && data && data.length > 0 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages ?? 1}
+            />
+          )}
         </section>
       </section>
     </Main>

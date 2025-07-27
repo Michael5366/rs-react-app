@@ -38,10 +38,16 @@ export interface DataProps {
 }
 
 export interface AppContextProps {
-  searchTerm: string;
-  setSearchTerm: (value: string) => void;
-  handleSearch: (term?: string) => void;
-  data: EpisodeCardData[] | null;
-  loading: boolean;
-  error: string;
+  searchTerm?: string;
+  setSearchTerm?: (value: string) => void;
+  handleSearch?: (term?: string, currentPage?: number) => void;
+  data?: EpisodeCardData[] | null;
+  loading?: boolean;
+  error?: string;
+  totalPages?: number;
+}
+
+export interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
 }
