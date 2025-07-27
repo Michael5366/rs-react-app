@@ -24,41 +24,44 @@ const App = () => {
     setError(message);
   };
 
-  const handleSearch = useCallback(async (term?: string) => {
-    if (term) {
-      setSearchTerm(term);
-    }
-
-    setLoading(true);
-    setSearchTerm(term ?? '');
-
-    const url: string = term
-      ? `https://rickandmortyapi.com/api/episode/?name=${encodeURIComponent(term)}`
-      : 'https://rickandmortyapi.com/api/episode';
-
-    try {
-      const data: RickAndMortyAPIEpisodeResponse = await fetchData(url);
-
-      setData(
-        data.results?.map((episode: RickAndMortyAPIEpisode) => ({
-          id: episode.id,
-          itemHeader: 'Episode',
-          title: episode.name,
-          desHeader: 'Air Date & Code',
-          description: `${episode.air_date} — ${episode.episode}`,
-        })) ?? null
-      );
-
-      setLoading(false);
-      setError('');
-    } catch (error) {
-      if (error instanceof Error) {
-        handleError(error.message);
-      } else {
-        handleError('Unknown error occurred');
+  const handleSearch = useCallback(
+    async (term?: string) => {
+      if (term) {
+        setSearchTerm(term);
       }
-    }
-  }, []);
+
+      setLoading(true);
+      setSearchTerm(term ?? '');
+
+      const url: string = term
+        ? `https://rickandmortyapi.com/api/episode/?name=${encodeURIComponent(term)}`
+        : 'https://rickandmortyapi.com/api/episode';
+
+      try {
+        const data: RickAndMortyAPIEpisodeResponse = await fetchData(url);
+
+        setData(
+          data.results?.map((episode: RickAndMortyAPIEpisode) => ({
+            id: episode.id,
+            itemHeader: 'Episode',
+            title: episode.name,
+            desHeader: 'Air Date & Code',
+            description: `${episode.air_date} — ${episode.episode}`,
+          })) ?? null
+        );
+
+        setLoading(false);
+        setError('');
+      } catch (error) {
+        if (error instanceof Error) {
+          handleError(error.message);
+        } else {
+          handleError('Unknown error occurred');
+        }
+      }
+    },
+    [setSearchTerm]
+  );
 
   useEffect((): void => {
     handleSearch(searchTerm);
