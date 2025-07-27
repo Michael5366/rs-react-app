@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import LeftPanel from '../../components/CardList/LeftPanel/LeftPanel';
 import Main from '../../components/Main/Main';
 import SearchForm from '../../components/Search/Form';
@@ -35,6 +35,15 @@ const HomePage = () => {
 
   return (
     <Main>
+      <header>
+        <nav>
+          <ul>
+            <li>
+              <Link to="/about">About</Link>
+            </li>
+          </ul>
+        </nav>
+      </header>
       <SearchForm
         value={searchTerm ?? ''}
         onSearch={handleFormSearch}
