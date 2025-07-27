@@ -61,14 +61,8 @@ const App = () => {
   }, []);
 
   useEffect((): void => {
-    const savedTerm: string | null = searchTerm;
-    if (savedTerm) {
-      setSearchTerm(savedTerm);
-      handleSearch(savedTerm);
-    } else {
-      handleSearch();
-    }
-  }, [handleSearch]);
+    handleSearch(searchTerm);
+  }, []);
 
   const themeToggle = (): void => {
     setDarkMode((prev) => !prev);
