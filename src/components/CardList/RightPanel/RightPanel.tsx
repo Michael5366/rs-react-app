@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import Spinner from '../../Spinner/Spinner';
 import ErrorMsg from '../../Templates/ErrorMsg/ErrorMsg';
-import fetchData from '../../../api/swapiService'; // путь измени, если другой
+import fetchData from '../../../api/swapiService';
 import type { RickAndMortyAPIEpisode } from '../../../types/interfaces';
 
 const RightPanel = () => {
-  const { id } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const id = searchParams.get('details');
+
   const [item, setItem] = useState<RickAndMortyAPIEpisode | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -16,16 +18,15 @@ const RightPanel = () => {
 
     const fetchEpisode = async () => {
       setLoading(true);
+      setError('');
       try {
         const data = await fetchData(
           `https://rickandmortyapi.com/api/episode/${id}`
         );
         setItem(data as RickAndMortyAPIEpisode);
-        setError('');
-      } catch (error) {
-        setError(
-          error instanceof Error ? error.message : 'Error in RightPanel'
-        );
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Error in RightPanel');
+        setItem(null);
       } finally {
         setLoading(false);
       }
@@ -34,12 +35,20 @@ const RightPanel = () => {
     fetchEpisode();
   }, [id]);
 
+  const handleClose = () => {
+    searchParams.delete('details');
+    setSearchParams(searchParams);
+  };
+
   if (loading) return <Spinner />;
   if (error) return <ErrorMsg errorMsg={error} />;
   if (!item) return null;
 
   return (
     <div className="app__items">
+      <button onClick={handleClose} className="close-button">
+        Close
+      </button>
       <h3 className="app__items-header">Episode Description</h3>
       <div className="app__item-name">{item.name}</div>
       <div className="app__item-description">
