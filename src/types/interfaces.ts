@@ -36,3 +36,12 @@ export interface DataProps {
   loading: boolean;
   error: string;
 }
+
+export interface AppContextProps {
+  searchTerm: string;
+  setSearchTerm: (value: string) => void;
+  handleSearch: (term?: string) => void;
+  data: EpisodeCardData[] | null;
+  loading: boolean;
+  error: string;
+}

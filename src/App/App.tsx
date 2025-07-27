@@ -5,6 +5,7 @@ import CardList from '../components/CardList/CardList';
 import fetchData from '../api/swapiService';
 import ThemeToggle from '../components/ThemeToggle/ThemeToggle';
 import useLocalStorage from '../Hooks/useLocalStorage';
+import { AppContext } from '../context/AppContext';
 import type {
   EpisodeCardData,
   RickAndMortyAPIEpisode,
@@ -68,17 +69,21 @@ const App = () => {
   };
 
   return (
-    <div className={`app ${darkMode ? 'dark-theme' : ''}`}>
-      <ThemeToggle onToggle={themeToggle} isDark={darkMode} />
-      <Main>
-        <SearchForm
-          value={searchTerm}
-          onSearch={handleSearch}
-          onChange={(value) => setSearchTerm(value)}
-        />
-        <CardList data={data} loading={loading} error={error} />
-      </Main>
-    </div>
+    <AppContext
+      value={{ searchTerm, setSearchTerm, handleSearch, data, loading, error }}
+    >
+      <div className={`app ${darkMode ? 'dark-theme' : ''}`}>
+        <ThemeToggle onToggle={themeToggle} isDark={darkMode} />
+        <Main>
+          <SearchForm
+            value={searchTerm}
+            onSearch={handleSearch}
+            onChange={(value) => setSearchTerm(value)}
+          />
+          <CardList data={data} loading={loading} error={error} />
+        </Main>
+      </div>
+    </AppContext>
   );
 };
 
