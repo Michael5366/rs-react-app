@@ -11,175 +11,165 @@ vi.mock('../api/swapiService', () => ({
 describe('App component', (): void => {
   beforeEach((): void => {
     vi.clearAllMocks();
-
     localStorage.clear();
-
     vi.spyOn(Storage.prototype, 'setItem');
   });
 
-  it('should render and fetch initial data when no search term in localStorage', async () => {
-    const mockFilms = {
+  it('should fetch default episodes when no search term in localStorage', async () => {
+    const mockEpisodes = {
       results: [
         {
-          title: 'A New Hope',
-          opening_crawl: 'It is a period of civil war...',
+          id: 1,
+          name: 'Pilot',
+          air_date: 'December 2, 2013',
+          episode: 'S01E01',
+          characters: [],
+          url: 'https://rickandmortyapi.com/api/episode/1',
+          created: '2017-11-10T12:56:33.798Z',
         },
       ],
     };
 
-    vi.mocked(fetchData).mockResolvedValue(mockFilms);
+    vi.mocked(fetchData).mockResolvedValue(mockEpisodes);
 
     render(<App />);
 
-    const spinner: HTMLElement = screen.getByRole('status');
-    expect(spinner).toBeInTheDocument();
+    expect(fetchData).toHaveBeenCalledWith(
+      'https://rickandmortyapi.com/api/episode'
+    );
 
-    expect(fetchData).toHaveBeenCalledTimes(1);
-    expect(fetchData).toHaveBeenCalledWith('https://swapi.py4e.com/api/films/');
+    const title = await screen.findByText('Pilot');
+    const description = screen.getByText('December 2, 2013 — S01E01');
 
-    const filmTitle = await screen.findByText('A New Hope');
-    expect(filmTitle).toBeInTheDocument();
-
-    expect(spinner).not.toBeInTheDocument();
+    expect(title).toBeInTheDocument();
+    expect(description).toBeInTheDocument();
   });
 
-  it('should load search term from localStorage and fetch data on mount', async () => {
-    localStorage.setItem('searchTerm', 'New Hope');
+  it('should load saved search term from localStorage and fetch filtered episodes', async () => {
+    localStorage.setItem('searchTerm', 'Pilot');
+
+    const mockEpisodes = {
+      results: [
+        {
+          id: 1,
+          name: 'Pilot',
+          air_date: 'December 2, 2013',
+          episode: 'S01E01',
+          characters: [],
+          url: 'https://rickandmortyapi.com/api/episode/1',
+          created: '2017-11-10T12:56:33.798Z',
+        },
+      ],
+    };
+
+    vi.mocked(fetchData).mockResolvedValue(mockEpisodes);
+
+    render(<App />);
+
+    expect(fetchData).toHaveBeenCalledWith(
+      'https://rickandmortyapi.com/api/episode/?name=Pilot'
+    );
+
+    const input = screen.getByRole('textbox');
+    expect(input).toHaveValue('Pilot');
+
+    const title = await screen.findByText('Pilot');
+    expect(title).toBeInTheDocument();
+  });
+
+  it('should allow user to type and search for episodes', async () => {
+    const user = userEvent.setup();
+
+    vi.mocked(fetchData).mockResolvedValueOnce({
+      results: [],
+      info: {
+        count: 0,
+        pages: 0,
+        next: null,
+        prev: null,
+      },
+    });
 
     const mockSearchResults = {
       results: [
         {
-          title: 'A New Hope',
-          opening_crawl: 'It is a period of civil war...',
+          id: 2,
+          name: 'Lawnmower Dog',
+          air_date: 'December 9, 2013',
+          episode: 'S01E02',
+          characters: [],
+          url: 'https://rickandmortyapi.com/api/episode/1',
+          created: '2017-11-10T12:56:33.798Z',
         },
       ],
     };
 
-    vi.mocked(fetchData).mockResolvedValue(mockSearchResults);
-
-    render(<App />);
-
-    const spinner: HTMLElement = screen.getByRole('status');
-
-    expect(fetchData).toHaveBeenCalledTimes(1);
-    expect(fetchData).toHaveBeenCalledWith(
-      'https://swapi.py4e.com/api/films/?search=New%20Hope'
-    );
-
-    const input: HTMLElement = screen.getByRole('textbox');
-    expect(input).toHaveValue('New Hope');
-
-    const filmTitle: HTMLElement = await screen.findByText('A New Hope');
-    expect(filmTitle).toBeInTheDocument();
-
-    expect(spinner).not.toBeInTheDocument();
-  });
-
-  it('should allow user to type, search, and see results', async () => {
-    const user = userEvent.setup();
-
-    vi.mocked(fetchData).mockResolvedValueOnce({ results: [] });
-
-    const mockSearchResponse = {
-      results: [
-        {
-          title: 'A New Hope',
-          opening_crawl: 'It is a period of civil war.',
-        },
-      ],
-    };
-
-    vi.mocked(fetchData).mockResolvedValueOnce(mockSearchResponse);
-
-    vi.spyOn(Storage.prototype, 'setItem');
+    vi.mocked(fetchData).mockResolvedValueOnce(mockSearchResults);
 
     render(<App />);
 
     await screen.findByRole('textbox');
 
-    const button: HTMLElement = screen.getByRole('button', {
-      name: "Let's go",
-    });
-    const input: HTMLElement = screen.getByRole('textbox');
-    expect(button).toBeInTheDocument();
-    expect(input).toBeInTheDocument();
+    const input = screen.getByRole('textbox');
+    const button = screen.getByRole('button', { name: /let's go/i });
 
-    await user.type(input, 'New Hope');
-    expect(input).toHaveValue('New Hope');
-
+    await user.clear(input);
+    await user.type(input, 'Lawnmower');
     await user.click(button);
 
     expect(fetchData).toHaveBeenCalledWith(
-      'https://swapi.py4e.com/api/films/?search=New%20Hope'
+      'https://rickandmortyapi.com/api/episode/?name=Lawnmower'
     );
 
-    expect(localStorage.setItem).toHaveBeenCalledWith('searchTerm', 'New Hope');
-
-    const spinner: HTMLElement | null = screen.queryByRole('status');
-    if (spinner) {
-      expect(spinner).toBeInTheDocument();
-    }
-
-    const filmTitle: HTMLElement = await screen.findByText('A New Hope');
-    expect(filmTitle).toBeInTheDocument();
-
-    expect(spinner).not.toBeInTheDocument();
+    const result = await screen.findByText('Lawnmower Dog');
+    expect(result).toBeInTheDocument();
+    expect(localStorage.setItem).toHaveBeenCalledWith(
+      'searchTerm',
+      'Lawnmower'
+    );
   });
 
-  it('should display an error message if the API call fails', async () => {
+  it('should display an error message on failed API call', async () => {
     const user = userEvent.setup();
 
-    vi.mocked(fetchData).mockResolvedValueOnce({ results: [] });
+    vi.mocked(fetchData).mockResolvedValueOnce({
+      results: [],
+      info: {
+        count: 0,
+        pages: 0,
+        next: null,
+        prev: null,
+      },
+    });
 
-    const errorMessage = 'Something went wrong';
-    vi.mocked(fetchData).mockRejectedValueOnce(new Error(errorMessage));
+    vi.mocked(fetchData).mockRejectedValueOnce(new Error('Network error'));
 
     render(<App />);
 
-    const button: HTMLElement = screen.getByRole('button', {
-      name: "Let's go",
-    });
-    const input: HTMLElement = screen.getByRole('textbox');
-    expect(button).toBeInTheDocument();
-    expect(input).toBeInTheDocument();
+    const input = screen.getByRole('textbox');
+    const button = screen.getByRole('button', { name: /let's go/i });
 
-    await user.type(input, 'Some error');
-    expect(input).toHaveValue('Some error');
-
+    await user.type(input, 'error');
     await user.click(button);
 
-    const spinner: HTMLElement | null = screen.queryByRole('status');
-    if (spinner) {
-      expect(spinner).toBeInTheDocument();
-    }
+    const error = await screen.findByText('Network error');
+    expect(error).toBeInTheDocument();
 
-    const errorElement: HTMLElement = await screen.findByText(errorMessage);
-    expect(errorElement).toBeInTheDocument();
-
-    const itemHeader = screen.queryByRole('Item header');
-    expect(itemHeader).not.toBeInTheDocument();
-
-    expect(spinner).not.toBeInTheDocument();
+    const card = screen.queryByRole('heading', { name: /episode/i });
+    expect(card).not.toBeInTheDocument();
   });
 
-  it('should toggle theme when theme toggle button is clicked', async () => {
+  it('should toggle theme when clicking theme toggle button', async () => {
     const user = userEvent.setup();
 
     const { container } = render(<App />);
 
-    const appRootElement = container.querySelector('.app');
-    if (appRootElement) {
-      expect(appRootElement).not.toHaveClass('dark-theme');
-    }
+    const appRoot = container.querySelector('.app');
+    expect(appRoot).not.toHaveClass('dark-theme');
 
-    const toggleThemeBtn = screen.getByRole('button', {
-      name: 'toggle theme',
-    });
+    const toggleButton = screen.getByRole('button', { name: /toggle theme/i });
+    await user.click(toggleButton);
 
-    await user.click(toggleThemeBtn);
-
-    if (appRootElement) {
-      expect(appRootElement).toHaveClass('dark-theme');
-    }
+    expect(appRoot).toHaveClass('dark-theme');
   });
 });

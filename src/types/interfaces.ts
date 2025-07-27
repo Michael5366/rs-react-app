@@ -42,13 +42,13 @@ export interface RickAndMortyAPIEpisode {
 }
 
 export interface RickAndMortyAPIEpisodeResponse {
-  info: {
-    count: number;
-    pages: number;
-    next: string | null;
-    prev: string | null;
+  info?: {
+    count?: number;
+    pages?: number;
+    next?: string | null;
+    prev?: string | null;
   };
-  results: RickAndMortyAPIEpisode[];
+  results?: RickAndMortyAPIEpisode[];
 }
 
 export interface DataProps {
