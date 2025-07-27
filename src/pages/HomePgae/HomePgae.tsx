@@ -1,5 +1,5 @@
+import { Outlet } from 'react-router-dom';
 import LeftPanel from '../../components/CardList/LeftPanel/LeftPanel';
-import RightPanel from '../../components/CardList/RightPanel/RightPanel';
 import Main from '../../components/Main/Main';
 import SearchForm from '../../components/Search/Form';
 import Spinner from '../../components/Spinner/Spinner';
@@ -26,28 +26,38 @@ const HomePage = () => {
           </PageHeader>
 
           <section className="app__results-output">
-            <div className="app__output">
-              {error && (
-                <ErrorMsg
-                  errorMsg={typeof error === 'string' ? error : String(error)}
-                />
-              )}
-              {!error && loading && <Spinner />}
-              {!error &&
-                !loading &&
-                data &&
-                data?.length > 0 &&
-                data.map((item) => {
-                  return (
-                    <div className="app__result" key={item.id}>
-                      <RightPanel item={item} />
-                      <LeftPanel item={item} />
-                    </div>
-                  );
-                })}
-              {!error && !loading && (!data || data.length === 0) && (
-                <ErrorMsg errorMsg="Nothing matched your query" />
-              )}
+            <div className="app__output-wrapper">
+              <div className="app__output">
+                <div className="app__result">
+                  <div className="app__left-panel">
+                    {error && (
+                      <ErrorMsg
+                        errorMsg={
+                          typeof error === 'string' ? error : String(error)
+                        }
+                      />
+                    )}
+                    {!error && loading && <Spinner />}
+                    {!error &&
+                      !loading &&
+                      data &&
+                      data?.length > 0 &&
+                      data.map((item) => {
+                        return (
+                          <div className="app__left-panel-name" key={item.id}>
+                            <LeftPanel item={item} />
+                          </div>
+                        );
+                      })}
+                    {!error && !loading && (!data || data.length === 0) && (
+                      <ErrorMsg errorMsg="Nothing matched your query" />
+                    )}
+                  </div>
+                  <div className="app__right-panel">
+                    <Outlet />
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
         </section>

@@ -12,6 +12,7 @@ import { Route, Routes } from 'react-router-dom';
 import HomePage from '../pages/HomePgae/HomePgae';
 import AboutPage from '../pages/AboutPage/AboutPage';
 import Page404 from '../pages/Page404/Page404';
+import RightPanel from '../components/CardList/RightPanel/RightPanel';
 
 const App = () => {
   const [data, setData] = useState<EpisodeCardData[] | null>(null);
@@ -76,7 +77,9 @@ const App = () => {
       <div className={`app ${darkMode ? 'dark-theme' : ''}`}>
         <ThemeToggle onToggle={themeToggle} isDark={darkMode} />
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<HomePage />}>
+            <Route path="details/:id" element={<RightPanel />} />
+          </Route>
           <Route path="/about" element={<AboutPage />} />
           <Route path="*" element={<Page404 />} />
         </Routes>
