@@ -16,8 +16,7 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [darkMode, setDarkMode] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [storageValue, setStorageValue] = useLocalStorage('searchTerm', '');
+  const [searchTerm, setSearchTerm] = useLocalStorage('searchTerm', '');
 
   const handleError = (message: string): void => {
     setData(null);
@@ -27,7 +26,7 @@ const App = () => {
 
   const handleSearch = useCallback(async (term?: string) => {
     if (term) {
-      setStorageValue(term);
+      setSearchTerm(term);
     }
 
     setLoading(true);
@@ -62,7 +61,7 @@ const App = () => {
   }, []);
 
   useEffect((): void => {
-    const savedTerm: string | null = storageValue;
+    const savedTerm: string | null = searchTerm;
     if (savedTerm) {
       setSearchTerm(savedTerm);
       handleSearch(savedTerm);
