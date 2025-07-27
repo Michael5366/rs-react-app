@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from 'react';
 import Main from '../components/Main/Main';
 import SearchForm from '../components/Search/Form';
 import CardList from '../components/CardList/CardList';
-import ErrorButton from '../components/ErrorButton/ErrorButton';
 import fetchData from '../api/swapiService';
 import ThemeToggle from '../components/ThemeToggle/ThemeToggle';
 import useLocalStorage from '../Hooks/useLocalStorage';
@@ -86,7 +85,6 @@ const App = () => {
           onChange={(value) => setSearchTerm(value)}
         />
         <CardList data={data} loading={loading} error={error} />
-        <ErrorButton />
       </Main>
     </div>
   );
