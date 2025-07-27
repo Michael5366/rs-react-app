@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 import fetchData from '../api/swapiService';
+import { MemoryRouter } from 'react-router-dom';
 
 vi.mock('../api/swapiService', () => ({
   default: vi.fn(),
@@ -32,7 +33,11 @@ describe('App component', (): void => {
 
     vi.mocked(fetchData).mockResolvedValue(mockEpisodes);
 
-    render(<App />);
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    );
 
     expect(fetchData).toHaveBeenCalledWith(
       'https://rickandmortyapi.com/api/episode'
@@ -64,7 +69,11 @@ describe('App component', (): void => {
 
     vi.mocked(fetchData).mockResolvedValue(mockEpisodes);
 
-    render(<App />);
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    );
 
     expect(fetchData).toHaveBeenCalledWith(
       'https://rickandmortyapi.com/api/episode/?name=Pilot'
@@ -106,7 +115,11 @@ describe('App component', (): void => {
 
     vi.mocked(fetchData).mockResolvedValueOnce(mockSearchResults);
 
-    render(<App />);
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    );
 
     await screen.findByRole('textbox');
 
@@ -144,7 +157,11 @@ describe('App component', (): void => {
 
     vi.mocked(fetchData).mockRejectedValueOnce(new Error('Network error'));
 
-    render(<App />);
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    );
 
     const input = screen.getByRole('textbox');
     const button = screen.getByRole('button', { name: /let's go/i });
@@ -162,7 +179,11 @@ describe('App component', (): void => {
   it('should toggle theme when clicking theme toggle button', async () => {
     const user = userEvent.setup();
 
-    const { container } = render(<App />);
+    const { container } = render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    );
 
     const appRoot = container.querySelector('.app');
     expect(appRoot).not.toHaveClass('dark-theme');
