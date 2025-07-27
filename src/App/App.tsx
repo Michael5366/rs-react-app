@@ -1,7 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import Main from '../components/Main/Main';
-import SearchForm from '../components/Search/Form';
-import CardList from '../components/CardList/CardList';
 import fetchData from '../api/swapiService';
 import ThemeToggle from '../components/ThemeToggle/ThemeToggle';
 import useLocalStorage from '../Hooks/useLocalStorage';
@@ -11,6 +8,10 @@ import type {
   RickAndMortyAPIEpisode,
   RickAndMortyAPIEpisodeResponse,
 } from '../types/interfaces';
+import { Route, Routes } from 'react-router-dom';
+import HomePage from '../pages/HomePgae/HomePgae';
+import AboutPage from '../pages/AboutPage/AboutPage';
+import Page404 from '../pages/Page404/Page404';
 
 const App = () => {
   const [data, setData] = useState<EpisodeCardData[] | null>(null);
@@ -74,14 +75,11 @@ const App = () => {
     >
       <div className={`app ${darkMode ? 'dark-theme' : ''}`}>
         <ThemeToggle onToggle={themeToggle} isDark={darkMode} />
-        <Main>
-          <SearchForm
-            value={searchTerm}
-            onSearch={handleSearch}
-            onChange={(value) => setSearchTerm(value)}
-          />
-          <CardList data={data} loading={loading} error={error} />
-        </Main>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="*" element={<Page404 />} />
+        </Routes>
       </div>
     </AppContext>
   );
