@@ -26,10 +26,6 @@ const App = () => {
 
   const handleSearch = useCallback(
     async (term?: string) => {
-      if (term) {
-        setSearchTerm(term);
-      }
-
       setLoading(true);
       setSearchTerm(term ?? '');
 
