@@ -3,34 +3,6 @@ export interface HtmlElementProps {
   children?: React.ReactNode;
 }
 
-export interface CharacterData {
-  id?: number;
-  itemHeader?: string;
-  title?: string;
-  desHeader?: string;
-  description?: string;
-  image?: string;
-}
-
-export interface RickAndMortyAPICharacter {
-  id: number;
-  name: string;
-  status: string;
-  species: string;
-  image: string;
-  [key: string]: unknown;
-}
-
-export interface RickAndMortyAPIResponse {
-  info: {
-    count: number;
-    pages: number;
-    next: string | null;
-    prev: string | null;
-  };
-  results: RickAndMortyAPICharacter[];
-}
-
 export interface RickAndMortyAPIEpisode {
   id: number;
   name: string;
@@ -51,8 +23,16 @@ export interface RickAndMortyAPIEpisodeResponse {
   results?: RickAndMortyAPIEpisode[];
 }
 
+export interface EpisodeCardData {
+  id: number;
+  itemHeader: string;
+  title: string;
+  desHeader: string;
+  description: string;
+}
+
 export interface DataProps {
-  data: CharacterData[] | null;
+  data: EpisodeCardData[] | null;
   loading: boolean;
   error: string;
 }

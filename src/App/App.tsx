@@ -6,13 +6,13 @@ import ErrorButton from '../components/ErrorButton/ErrorButton';
 import fetchData from '../api/swapiService';
 import ThemeToggle from '../components/ThemeToggle/ThemeToggle';
 import type {
-  CharacterData,
+  EpisodeCardData,
   RickAndMortyAPIEpisode,
   RickAndMortyAPIEpisodeResponse,
 } from '../types/interfaces';
 
 const App = () => {
-  const [data, setData] = useState<CharacterData[] | null>(null);
+  const [data, setData] = useState<EpisodeCardData[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [darkMode, setDarkMode] = useState(false);
