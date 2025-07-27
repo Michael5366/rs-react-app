@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 import fetchData from '../api/swapiService';
@@ -10,94 +10,74 @@ vi.mock('../api/swapiService', () => ({
 }));
 
 describe('App component', (): void => {
+  const mockInitialData = {
+    results: [],
+    info: { pages: 1 },
+  };
+
+  const mockEpisode = {
+    id: 1,
+    name: 'Pilot',
+    air_date: 'December 2, 2013',
+    episode: 'S01E01',
+    characters: [],
+    url: 'https://rickandmortyapi.com/api/episode/1',
+    created: '2017-11-10T12:56:33.798Z',
+  };
+
+  const mockEpisodesResponse = {
+    results: [mockEpisode],
+    info: { pages: 1 },
+  };
+
   beforeEach((): void => {
     vi.clearAllMocks();
     localStorage.clear();
     vi.spyOn(Storage.prototype, 'setItem');
+    vi.mocked(fetchData).mockResolvedValue(mockInitialData);
   });
 
-  it('should fetch default episodes when no search term in localStorage', async () => {
-    const mockEpisodes = {
-      results: [
-        {
-          id: 1,
-          name: 'Pilot',
-          air_date: 'December 2, 2013',
-          episode: 'S01E01',
-          characters: [],
-          url: 'https://rickandmortyapi.com/api/episode/1',
-          created: '2017-11-10T12:56:33.798Z',
-        },
-      ],
-    };
-
-    vi.mocked(fetchData).mockResolvedValue(mockEpisodes);
+  it('should fetch default episodes on initial render', async () => {
+    vi.mocked(fetchData).mockResolvedValue(mockEpisodesResponse);
 
     render(
-      <MemoryRouter>
+      <MemoryRouter initialEntries={['/']}>
         <App />
       </MemoryRouter>
     );
 
-    expect(fetchData).toHaveBeenCalledWith(
-      'https://rickandmortyapi.com/api/episode'
-    );
+    await waitFor(() => {
+      expect(fetchData).toHaveBeenCalledWith(
+        'https://rickandmortyapi.com/api/episode/?page=1'
+      );
+    });
 
-    const title = await screen.findByText('Pilot');
-    const description = screen.getByText('December 2, 2013 — S01E01');
-
-    expect(title).toBeInTheDocument();
-    expect(description).toBeInTheDocument();
+    expect(await screen.findByText('Pilot')).toBeInTheDocument();
   });
 
   it('should load saved search term from localStorage and fetch filtered episodes', async () => {
     localStorage.setItem('searchTerm', 'Pilot');
-
-    const mockEpisodes = {
-      results: [
-        {
-          id: 1,
-          name: 'Pilot',
-          air_date: 'December 2, 2013',
-          episode: 'S01E01',
-          characters: [],
-          url: 'https://rickandmortyapi.com/api/episode/1',
-          created: '2017-11-10T12:56:33.798Z',
-        },
-      ],
-    };
-
-    vi.mocked(fetchData).mockResolvedValue(mockEpisodes);
+    vi.mocked(fetchData).mockResolvedValue(mockEpisodesResponse);
 
     render(
-      <MemoryRouter>
+      <MemoryRouter initialEntries={['/']}>
         <App />
       </MemoryRouter>
     );
 
-    expect(fetchData).toHaveBeenCalledWith(
-      'https://rickandmortyapi.com/api/episode/?name=Pilot'
-    );
+    await waitFor(() => {
+      expect(fetchData).toHaveBeenCalledWith(
+        'https://rickandmortyapi.com/api/episode/?page=1&name=Pilot'
+      );
+    });
 
     const input = screen.getByRole('textbox');
     expect(input).toHaveValue('Pilot');
-
-    const title = await screen.findByText('Pilot');
-    expect(title).toBeInTheDocument();
+    expect(await screen.findByText('Pilot')).toBeInTheDocument();
   });
 
   it('should allow user to type and search for episodes', async () => {
     const user = userEvent.setup();
-
-    vi.mocked(fetchData).mockResolvedValueOnce({
-      results: [],
-      info: {
-        count: 0,
-        pages: 0,
-        next: null,
-        prev: null,
-      },
-    });
 
     const mockSearchResults = {
       results: [
@@ -107,35 +87,30 @@ describe('App component', (): void => {
           air_date: 'December 9, 2013',
           episode: 'S01E02',
           characters: [],
-          url: 'https://rickandmortyapi.com/api/episode/1',
+          url: 'https://rickandmortyapi.com/api/episode/2',
           created: '2017-11-10T12:56:33.798Z',
         },
       ],
+      info: { pages: 1 },
     };
 
-    vi.mocked(fetchData).mockResolvedValueOnce(mockSearchResults);
+    vi.mocked(fetchData)
+      .mockResolvedValueOnce(mockInitialData)
+      .mockResolvedValue(mockSearchResults);
 
     render(
-      <MemoryRouter>
+      <MemoryRouter initialEntries={['/']}>
         <App />
       </MemoryRouter>
     );
 
-    await screen.findByRole('textbox');
-
     const input = screen.getByRole('textbox');
-    const button = screen.getByRole('button', { name: /let's go/i });
-
-    await user.clear(input);
     await user.type(input, 'Lawnmower');
-    await user.click(button);
 
+    expect(await screen.findByText('Lawnmower Dog')).toBeInTheDocument();
     expect(fetchData).toHaveBeenCalledWith(
-      'https://rickandmortyapi.com/api/episode/?name=Lawnmower'
+      'https://rickandmortyapi.com/api/episode/?page=1&name=Lawnmower'
     );
-
-    const result = await screen.findByText('Lawnmower Dog');
-    expect(result).toBeInTheDocument();
     expect(localStorage.setItem).toHaveBeenCalledWith(
       'searchTerm',
       'Lawnmower'
@@ -143,44 +118,22 @@ describe('App component', (): void => {
   });
 
   it('should display an error message on failed API call', async () => {
-    const user = userEvent.setup();
-
-    vi.mocked(fetchData).mockResolvedValueOnce({
-      results: [],
-      info: {
-        count: 0,
-        pages: 0,
-        next: null,
-        prev: null,
-      },
-    });
-
-    vi.mocked(fetchData).mockRejectedValueOnce(new Error('Network error'));
+    vi.mocked(fetchData).mockRejectedValue(new Error('Network error'));
 
     render(
-      <MemoryRouter>
+      <MemoryRouter initialEntries={['/']}>
         <App />
       </MemoryRouter>
     );
 
-    const input = screen.getByRole('textbox');
-    const button = screen.getByRole('button', { name: /let's go/i });
-
-    await user.type(input, 'error');
-    await user.click(button);
-
-    const error = await screen.findByText('Network error');
-    expect(error).toBeInTheDocument();
-
-    const card = screen.queryByRole('heading', { name: /episode/i });
-    expect(card).not.toBeInTheDocument();
+    expect(await screen.findByText('Network error')).toBeInTheDocument();
+    expect(screen.queryByText('Pilot')).not.toBeInTheDocument();
   });
 
   it('should toggle theme when clicking theme toggle button', async () => {
     const user = userEvent.setup();
-
     const { container } = render(
-      <MemoryRouter>
+      <MemoryRouter initialEntries={['/']}>
         <App />
       </MemoryRouter>
     );
