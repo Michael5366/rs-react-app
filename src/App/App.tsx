@@ -5,6 +5,7 @@ import CardList from '../components/CardList/CardList';
 import ErrorButton from '../components/ErrorButton/ErrorButton';
 import fetchData from '../api/swapiService';
 import ThemeToggle from '../components/ThemeToggle/ThemeToggle';
+import useLocalStorage from '../Hooks/useLocalStorage';
 import type {
   EpisodeCardData,
   RickAndMortyAPIEpisode,
@@ -17,6 +18,7 @@ const App = () => {
   const [error, setError] = useState('');
   const [darkMode, setDarkMode] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [storageValue, setStorageValue] = useLocalStorage('searchTerm', '');
 
   const handleError = (message: string): void => {
     setData(null);
@@ -26,7 +28,7 @@ const App = () => {
 
   const handleSearch = useCallback(async (term?: string) => {
     if (term) {
-      localStorage.setItem('searchTerm', term);
+      setStorageValue(term);
     }
 
     setLoading(true);
@@ -61,7 +63,7 @@ const App = () => {
   }, []);
 
   useEffect((): void => {
-    const savedTerm: string | null = localStorage.getItem('searchTerm');
+    const savedTerm: string | null = storageValue;
     if (savedTerm) {
       setSearchTerm(savedTerm);
       handleSearch(savedTerm);
