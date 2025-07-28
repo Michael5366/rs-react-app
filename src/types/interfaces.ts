@@ -51,3 +51,7 @@ export interface PaginationProps {
   currentPage: number;
   totalPages: number;
 }
+
+export interface LeftPanelProps {
+  item: EpisodeCardData;
+}

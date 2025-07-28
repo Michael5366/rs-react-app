@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import type { ItemProps } from '../components/Card/interface';
+import type { LeftPanelProps } from '../../../types/interfaces';
 
-const LeftPanel = ({ item }: ItemProps) => {
+const LeftPanel = ({ item }: LeftPanelProps) => {
   return (
     <div className="app__items">
       <h3 className="app__items-header">Episode</h3>
