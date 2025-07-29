@@ -72,12 +72,12 @@ const HomePage = () => {
                   <ErrorMsg errorMsg="Nothing matched your query" />
                 )}
               </div>
-              <div className="app__right-panel">
-                {detailsId ? (
-                  <RightPanel />
-                ) : (
-                  <p>Select an episode to view details</p>
-                )}
+              <div
+                className={
+                  detailsId ? 'app__right-panel--active' : 'app__right-panel'
+                }
+              >
+                <RightPanel />
               </div>
             </div>
           </div>
