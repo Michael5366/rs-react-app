@@ -1,34 +1,19 @@
-.app__about {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 1.5rem;
-  line-height: 1.6;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #fdfdfd;
-  border-radius: 12px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+.app__about-container {
+  padding: 20px;
+  text-align: center;
 }
 
-.app__about h1 {
-  font-size: 2rem;
-  color: #333;
+.app__about-author {
+  font-size: 1.2rem;
+  margin: 20px 0;
 }
 
-.app__about h2 {
-  margin-top: 1.5rem;
-  color: #555;
-}
-
-.app__about a {
-  color: #007acc;
-  text-decoration: none;
-}
-
-.app__about a:hover {
+.app__about-link {
   text-decoration: underline;
 }
 
-.about__now ul {
-  padding-left: 1.2rem;
-  list-style-type: '👉 ';
+.app__about-back-link {
+  display: inline-block;
+  margin-top: 30px;
+  font-weight: bold;
 }
