@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import RightPanel from './RightPanel';
 import fetchData from '../../../api/swapiService';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import type { RickAndMortyAPIEpisode } from '../../../types/interfaces';
 
 vi.mock('../../../api/swapiService');
@@ -13,22 +13,24 @@ describe('RightPanel', () => {
     vi.clearAllMocks();
   });
 
-  it('should show a spinner and then display episode details on successful fetch', async () => {
-    const apiResponse: RickAndMortyAPIEpisode = {
-      id: 1,
-      name: 'Pilot',
-      air_date: 'December 2, 2013',
-      episode: 'S01E01',
-      characters: [],
-      url: '',
-      created: '',
-    };
+  const apiResponse: RickAndMortyAPIEpisode = {
+    id: 1,
+    name: 'Pilot',
+    air_date: 'December 2, 2013',
+    episode: 'S01E01',
+    characters: [],
+    url: '',
+    created: '',
+  };
 
+  it('should show a spinner and then display episode details on successful fetch', async () => {
     vi.mocked(fetchData).mockResolvedValue(apiResponse);
 
     render(
-      <MemoryRouter initialEntries={['/?details=1']}>
-        <RightPanel />
+      <MemoryRouter initialEntries={['/1']}>
+        <Routes>
+          <Route path="/:id" element={<RightPanel />} />
+        </Routes>
       </MemoryRouter>
     );
 
@@ -47,8 +49,10 @@ describe('RightPanel', () => {
     vi.mocked(fetchData).mockRejectedValue(new Error('Network error'));
 
     render(
-      <MemoryRouter initialEntries={['/?details=1']}>
-        <RightPanel />
+      <MemoryRouter initialEntries={['/1']}>
+        <Routes>
+          <Route path="/:id" element={<RightPanel />} />
+        </Routes>
       </MemoryRouter>
     );
 
@@ -60,10 +64,14 @@ describe('RightPanel', () => {
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
   });
 
-  it('should render nothing if "details" search param is not provided', () => {
+  it('should render nothing if "id" route param is not provided', () => {
     const { container } = render(
       <MemoryRouter initialEntries={['/']}>
-        <RightPanel />
+        <Routes>
+          <Route path="/:id" element={<RightPanel />} />
+
+          <Route path="/" element={null} />
+        </Routes>
       </MemoryRouter>
     );
 
@@ -73,21 +81,13 @@ describe('RightPanel', () => {
   it('renders spinner, loads episode data, and closes panel on Close click', async () => {
     const user = userEvent.setup();
 
-    const apiResponse: RickAndMortyAPIEpisode = {
-      id: 1,
-      name: 'Pilot',
-      air_date: 'December 2, 2013',
-      episode: 'S01E01',
-      characters: [],
-      url: '',
-      created: '',
-    };
-
     vi.mocked(fetchData).mockResolvedValue(apiResponse);
 
     render(
-      <MemoryRouter initialEntries={['/?details=1']}>
-        <RightPanel />
+      <MemoryRouter initialEntries={['/1']}>
+        <Routes>
+          <Route path="/:id" element={<RightPanel />} />
+        </Routes>
       </MemoryRouter>
     );
 

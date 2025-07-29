@@ -11,13 +11,11 @@ describe('AboutPage', () => {
       </MemoryRouter>
     );
 
-    const header = screen.getByRole('heading', { name: /hi.*michael/i });
-    const link = screen.getByRole('link', { name: 'RS School' });
+    const link = screen.getByRole('link', { name: 'Michael Elsky' });
 
-    expect(header).toBeInTheDocument();
     expect(link).toBeInTheDocument();
-    expect(link).toHaveAttribute('href', 'https://rs.school/');
+    expect(link).toHaveAttribute('href', 'https://github.com/Michael5366');
     expect(link).toHaveAttribute('target', '_blank');
-    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    expect(link).toHaveAttribute('rel', 'noreferrer');
   });
 });
