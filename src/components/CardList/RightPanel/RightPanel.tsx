@@ -38,6 +38,7 @@ const RightPanel = () => {
   const handleClose = () => {
     searchParams.delete('details');
     setSearchParams(searchParams);
+    setItem(null);
   };
 
   if (loading) return <Spinner />;

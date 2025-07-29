@@ -1,8 +1,4 @@
-import type { RickAndMortyAPIEpisodeResponse } from '../types/interfaces';
-
-const fetchData = async (
-  url: string
-): Promise<RickAndMortyAPIEpisodeResponse> => {
+const fetchData = async <T>(url: string): Promise<T> => {
   try {
     const response = await fetch(url);
 
