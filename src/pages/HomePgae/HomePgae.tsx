@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, Outlet, useMatch, useSearchParams } from 'react-router-dom';
 import LeftPanel from '../../components/CardList/LeftPanel/LeftPanel';
 import Main from '../../components/Main/Main';
 import SearchForm from '../../components/Search/Form';
@@ -7,7 +7,6 @@ import Spinner from '../../components/Spinner/Spinner';
 import ErrorMsg from '../../components/Templates/ErrorMsg/ErrorMsg';
 import PageHeader from '../../components/Templates/PageHeader/PageHeader';
 import { useAppContext } from '../../context/AppContext';
-import RightPanel from '../../components/CardList/RightPanel/RightPanel';
 import Pagination from '../../Pagination/Pagination';
 
 const HomePage = () => {
@@ -22,7 +21,7 @@ const HomePage = () => {
   } = useAppContext();
   const [searchParams] = useSearchParams();
 
-  const detailsId: string | null = searchParams.get('details');
+  const isDetailsPageActive = useMatch('/details/:id');
   const currentPage: number = parseInt(searchParams.get('page') || '1', 10);
 
   useEffect(() => {
@@ -74,10 +73,12 @@ const HomePage = () => {
               </div>
               <div
                 className={
-                  detailsId ? 'app__right-panel--active' : 'app__right-panel'
+                  isDetailsPageActive
+                    ? 'app__right-panel--active'
+                    : 'app__right-panel'
                 }
               >
-                <RightPanel />
+                <Outlet />
               </div>
             </div>
           </div>

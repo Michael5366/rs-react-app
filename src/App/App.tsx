@@ -12,6 +12,7 @@ import type {
   RickAndMortyAPIEpisode,
   RickAndMortyAPIEpisodeResponse,
 } from '../types/interfaces';
+import RightPanel from '../components/CardList/RightPanel/RightPanel';
 
 const App = () => {
   const [data, setData] = useState<EpisodeCardData[] | null>(null);
@@ -80,7 +81,9 @@ const App = () => {
       <div className={`app ${darkMode ? 'dark-theme' : ''}`}>
         <ThemeToggle onToggle={themeToggle} isDark={darkMode} />
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<HomePage />}>
+            <Route path="details/:id" element={<RightPanel />} />
+          </Route>
           <Route path="/about" element={<AboutPage />} />
           <Route path="*" element={<Page404 />} />
         </Routes>

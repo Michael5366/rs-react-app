@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Spinner from '../../Spinner/Spinner';
 import ErrorMsg from '../../Templates/ErrorMsg/ErrorMsg';
 import fetchData from '../../../api/swapiService';
 import type { RickAndMortyAPIEpisode } from '../../../types/interfaces';
 
 const RightPanel = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const id = searchParams.get('details');
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [item, setItem] = useState<RickAndMortyAPIEpisode | null>(null);
   const [loading, setLoading] = useState(false);
@@ -36,11 +37,10 @@ const RightPanel = () => {
   }, [id]);
 
   const handleClose = () => {
-    searchParams.delete('details');
-    setSearchParams(searchParams);
-    setItem(null);
+    navigate(`/${location.search}`);
   };
 
+  if (!id) return null;
   if (loading) return <Spinner />;
   if (error) return <ErrorMsg errorMsg={error} />;
   if (!item) return null;
