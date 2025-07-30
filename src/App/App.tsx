@@ -1,107 +1,95 @@
-import { Component } from 'react';
-import type { HtmlElementProps } from '../types/interfaces';
-import Main from '../components/Main/Main';
-import SearchForm from '../components/Search/Form';
-import CardList from '../components/CardList/CardList';
-import ErrorButton from '../components/ErrorButton/ErrorButton';
+import { useCallback, useState } from 'react';
 import fetchData from '../api/swapiService';
-import type { AppState, Film } from './interface';
 import ThemeToggle from '../components/ThemeToggle/ThemeToggle';
+import useLocalStorage from '../Hooks/useLocalStorage';
+import { AppContext } from '../context/AppContext';
+import { Route, Routes } from 'react-router-dom';
+import HomePage from '../pages/HomePgae/HomePgae';
+import AboutPage from '../pages/AboutPage/AboutPage';
+import Page404 from '../pages/Page404/Page404';
+import type {
+  EpisodeCardData,
+  RickAndMortyAPIEpisode,
+  RickAndMortyAPIEpisodeResponse,
+} from '../types/interfaces';
+import RightPanel from '../components/CardList/RightPanel/RightPanel';
 
-class App extends Component<HtmlElementProps, AppState> {
-  state: AppState = {
-    data: null,
-    detail: '',
-    loading: false,
-    error: '',
-    darkMode: false,
-    searchTerm: '',
+const App = () => {
+  const [data, setData] = useState<EpisodeCardData[] | null>(null);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [darkMode, setDarkMode] = useState(false);
+  const [searchTerm, setSearchTerm] = useLocalStorage('searchTerm', '');
+
+  const handleError = (message: string): void => {
+    setData(null);
+    setLoading(false);
+    setError(message);
   };
 
-  componentDidMount(): void {
-    const savedTerm: string | null = localStorage.getItem('searchTerm');
-    if (savedTerm) {
-      this.setState({ searchTerm: savedTerm });
-      this.handleSearch(savedTerm);
-    } else {
-      this.handleSearch();
-    }
-  }
+  const handleSearch = useCallback(async (term?: string, page: number = 1) => {
+    setLoading(true);
+    setError('');
 
-  handleError = (message: string) => {
-    this.setState({
-      detail: 'Something went wrong',
-      data: null,
-      loading: false,
-      error: message,
-    });
-  };
-
-  handleSearch = async (term?: string) => {
+    const params = new URLSearchParams();
+    params.append('page', String(page));
     if (term) {
-      localStorage.setItem('searchTerm', term);
+      params.append('name', term);
     }
 
-    this.setState({ loading: true, searchTerm: term ?? '' });
-
-    const url: string = term
-      ? `https://swapi.py4e.com/api/films/?search=${encodeURIComponent(term)}`
-      : 'https://swapi.py4e.com/api/films/';
+    const url = `https://rickandmortyapi.com/api/episode/?${params.toString()}`;
 
     try {
-      const data = await fetchData(url);
-
-      if (data && data.detail) {
-        this.setState({ detail: data.detail, data: null, loading: false });
-        return;
-      }
-
-      this.setState({
-        detail: '',
-        data:
-          data.results?.map((film: Film) => ({
-            itemHeader: 'Item name',
-            title: film.title,
-            desHeader: 'Item description',
-            opening_crawl: film.opening_crawl,
-          })) ?? null,
-        loading: false,
-      });
+      const response: RickAndMortyAPIEpisodeResponse = await fetchData(url);
+      setData(
+        response.results?.map((episode: RickAndMortyAPIEpisode) => ({
+          id: episode.id,
+          itemHeader: 'Episode',
+          title: episode.name,
+          desHeader: 'Air Date & Code',
+          description: `${episode.air_date} — ${episode.episode}`,
+        })) ?? null
+      );
+      setTotalPages(response.info?.pages ?? 1);
+      setLoading(false);
     } catch (error) {
-      console.error(`Error from handleSearch: ${error}`);
       if (error instanceof Error) {
-        this.handleError(error.message);
+        handleError(error.message);
       } else {
-        this.handleError('Unknown error occurred');
+        handleError('Unknown error occurred');
       }
     }
+  }, []);
+
+  const themeToggle = (): void => {
+    setDarkMode((prev) => !prev);
   };
 
-  themeToggle = (): void => {
-    this.setState((prev) => ({ darkMode: !prev.darkMode }));
-  };
-
-  render() {
-    return (
-      <div className={`app ${this.state.darkMode ? 'dark-theme' : ''}`}>
-        <ThemeToggle onToggle={this.themeToggle} isDark={this.state.darkMode} />
-
-        <Main>
-          <SearchForm
-            value={this.state.searchTerm}
-            onSearch={this.handleSearch}
-            onChange={(value) => this.setState({ searchTerm: value })}
-          />
-          <CardList
-            data={this.state.data}
-            loading={this.state.loading}
-            error={this.state.error}
-          />
-          <ErrorButton />
-        </Main>
+  return (
+    <AppContext.Provider
+      value={{
+        searchTerm,
+        setSearchTerm,
+        handleSearch,
+        data,
+        loading,
+        error,
+        totalPages,
+      }}
+    >
+      <div className={`app ${darkMode ? 'dark-theme' : ''}`}>
+        <ThemeToggle onToggle={themeToggle} isDark={darkMode} />
+        <Routes>
+          <Route path="/" element={<HomePage />}>
+            <Route path="details/:id" element={<RightPanel />} />
+          </Route>
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="*" element={<Page404 />} />
+        </Routes>
       </div>
-    );
-  }
-}
+    </AppContext.Provider>
+  );
+};
 
 export default App;

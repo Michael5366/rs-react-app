@@ -7,6 +7,8 @@
 @use './content/description/app-descriptions.scss';
 @use './content/description/app-descriptions-header.scss';
 @use './content/description/app-description.scss';
+@use './content/Panels/left-panel.scss';
+@use './content/Panels/right-panel.scss';
 
 .app__results-output {
   position: relative;

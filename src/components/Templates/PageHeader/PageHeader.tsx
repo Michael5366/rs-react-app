@@ -1,13 +1,10 @@
-import { Component, type JSX } from 'react';
+import { type JSX } from 'react';
 import type { PageHeaderProps } from './interface';
 
-class PageHeader extends Component<PageHeaderProps> {
-  render() {
-    const { level, className, children } = this.props;
-    const Tag = `h${level}` as keyof JSX.IntrinsicElements;
+const PageHeader = ({ level, className, children }: PageHeaderProps) => {
+  const Tag = `h${level}` as keyof JSX.IntrinsicElements;
 
-    return <Tag className={className}>{children}</Tag>;
-  }
-}
+  return <Tag className={className}>{children}</Tag>;
+};
 
 export default PageHeader;

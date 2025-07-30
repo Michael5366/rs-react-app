@@ -1,3 +1,5 @@
-.app__output {
-  width: 100%;
+.app__output-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }

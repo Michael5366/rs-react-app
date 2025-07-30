@@ -1,0 +1,9 @@
+.app__right-panel--active {
+  display: flex;
+  width: 100%;
+}
+
+.app__right-panel {
+  width: 0;
+  overflow: hidden;
+}

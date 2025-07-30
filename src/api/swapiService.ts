@@ -1,6 +1,4 @@
-import type { SwapiFilmResponse } from '../App/interface';
-
-const fetchData = async (url: string): Promise<SwapiFilmResponse> => {
+const fetchData = async <T>(url: string): Promise<T> => {
   try {
     const response = await fetch(url);
 
