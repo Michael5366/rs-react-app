@@ -1,5 +1,11 @@
 import { useEffect } from 'react';
-import { Link, Outlet, useMatch, useSearchParams } from 'react-router-dom';
+import {
+  Link,
+  Outlet,
+  useMatch,
+  useNavigate,
+  useSearchParams,
+} from 'react-router-dom';
 import LeftPanel from '../../components/CardList/LeftPanel/LeftPanel';
 import Main from '../../components/Main/Main';
 import SearchForm from '../../components/Search/Form';
@@ -20,6 +26,7 @@ const HomePage = () => {
     totalPages,
   } = useAppContext();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const isDetailsPageActive = useMatch('/details/:id');
   const currentPage: number = parseInt(searchParams.get('page') || '1', 10);
@@ -30,6 +37,15 @@ const HomePage = () => {
 
   const handleFormSearch = (term: string) => {
     setSearchTerm?.(term);
+  };
+
+  const handleLeftPanelClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLElement).closest('a')) {
+      return;
+    }
+    if (isDetailsPageActive) {
+      navigate(`/?${searchParams.toString()}`);
+    }
   };
 
   return (
@@ -55,7 +71,7 @@ const HomePage = () => {
         <section className="app__results-output">
           <div className="app__output-wrapper">
             <div className="app__result">
-              <div className="app__left-panel">
+              <div className="app__left-panel" onClick={handleLeftPanelClick}>
                 {error && <ErrorMsg errorMsg={error} />}
                 {!error && loading && <Spinner />}
                 {!error &&
